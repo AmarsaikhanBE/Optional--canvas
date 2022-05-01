@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arrow ball</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            width: calc(100vw - 16px);
+            height: calc(100vh - 16px);
+            position: relative;
+            background-color: #000;
+            margin: .5rem auto;
+            align-self: center;
+        }
+        
+        #ball {
+            width: 1rem;
+            height: 1rem;
+            border: none;
+            border-radius: 50%;
+            background-color: #fff;
+            position: absolute;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="ball" style="top: 50%; left: 50%;"></canvas>
+    <script>
+        const ball = document.querySelector('#ball');
+        const rect = ball.getBoundingClientRect();
+        let t = rect.top;
+        let l = rect.left;
+        const moveV = (op) => {
+            if (op == '+' || op == '-') {
+                t = eval(t + op + 1);
+                if (t < 1 || t > document.body.offsetHeight - 1) clearInterval(run);
+                ball.style.top = t + 'px';
+            };
+        };
+        const moveH = (op) => {
+            if (op == '+' || op == '-') {
+                l = eval(l + op + 1);
+                (l < 1 || l > document.body.offsetWidth - 1) ? clearInterval(run): l = l;
+                ball.style.left = l + 'px';
+            };
+        };
+        let run = null;
+        window.addEventListener('keydown', event => {
+            if (event.keyCode == 37 || event.keyCode == 38 || event.keyCode == 39 || event.keyCode == 40) {
+                clearInterval(run);
+                event.keyCode === 37 ? l > 0 ? run = setInterval(() => moveH('-'), 1) : console.log('End') : event.keyCode === 38 ? t > 0 ? run = setInterval(() => moveV('-'), 1) : console.log('End') : event.keyCode === 39 ? l < document.body.offsetWidth ? run = setInterval(() => moveH('+'), 1) : console.log('End') : t < document.body.offsetHeight ? run = setInterval(() => moveV('+'), 1) : console.log('End');
+            };
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bouncing ball</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            width: calc(100vw - 80px);
+            height: calc(100vh - 80px);
+            position: relative;
+            background-color: #000;
+            margin: 40px auto;
+            align-self: center;
+        }
+        
+        #ball {
+            width: 5rem;
+            height: 5rem;
+            border: none;
+            border-radius: 50%;
+            background-color: #fff;
+            position: absolute;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="ball" style="top: 50%; left: 50%;"></canvas>
+    <script>
+        const ball = document.querySelector('#ball');
+        const rect = ball.getBoundingClientRect();
+        let t = rect.top;
+        let l = rect.left;
+        let tRule = 'positive';
+        let lRule = 'positive';
+        setInterval(() => {
+            tRule == 'positive' ? t++ : t--;
+            t > document.body.offsetHeight ? tRule = 'negative' : t < 0 ? tRule = 'positive' : tRule = tRule;
+            ball.style.top = t + 'px';
+            lRule == "positive" ? l++ : l--;
+            l > document.body.offsetWidth ? lRule = 'negative' : l < 0 ? lRule = 'positive' : lRule = lRule;
+            ball.style.left = l + 'px';
+        }, 1);
+    </script>
+</body>
+
+</html>
