@@ -43,12 +43,31 @@
         let l = rect.left;
         let tRule = 'positive';
         let lRule = 'positive';
+        const changeColor = () => {
+            const r = Math.floor(Math.random() * 256);
+            const g = Math.floor(Math.random() * 256);
+            const b = Math.floor(Math.random() * 256);
+            ball.style.backgroundColor = `rgb(${r},${g},${b})`;
+        }
+        changeColor();
         setInterval(() => {
             tRule == 'positive' ? t++ : t--;
-            t > document.body.offsetHeight ? tRule = 'negative' : t < 0 ? tRule = 'positive' : tRule = tRule;
-            ball.style.top = t + 'px';
+            if (t < 0) {
+                tRule = 'positive';
+                changeColor();
+            } else if (t > document.body.offsetHeight) {
+                tRule = 'negative';
+                changeColor();
+            }
             lRule == "positive" ? l++ : l--;
-            l > document.body.offsetWidth ? lRule = 'negative' : l < 0 ? lRule = 'positive' : lRule = lRule;
+            if (l < 0) {
+                lRule = 'positive';
+                changeColor();
+            } else if (l > document.body.offsetWidth) {
+                lRule = 'negative';
+                changeColor();
+            }
+            ball.style.top = t + 'px';
             ball.style.left = l + 'px';
         }, 1);
     </script>
