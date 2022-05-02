@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arrow ball</title>
+    <title>Arrow div</title>
     <style>
         * {
             box-sizing: border-box;
@@ -14,20 +14,19 @@
         }
         
         body {
-            width: calc(100vw - 16px);
-            height: calc(100vh - 16px);
+            width: 100vw;
+            height: 100vh;
             position: relative;
             background-color: #000;
-            margin: .5rem auto;
             align-self: center;
         }
         
-        #ball {
+        #div {
             width: 1rem;
             height: 1rem;
             border: none;
             border-radius: 50%;
-            background-color: #fff;
+            background-color: #000;
             position: absolute;
             transform: translate(-50%, -50%);
         }
@@ -35,20 +34,22 @@
 </head>
 
 <body>
-    <canvas id="ball" style="top: 50%; left: 50%;"></canvas>
+    <div id="div" style="top: 50%; left: 50%;"></div>
+    <canvas id="myCanvas" width="1400" height="700"></canvas>
+    </canvas>
     <script>
-        const ball = document.querySelector('#ball');
-        const rect = ball.getBoundingClientRect();
+        const div = document.querySelector('#div');
+        const rect = div.getBoundingClientRect();
         let t = rect.top;
         let l = rect.left;
-        const moveBall = (pole, op) => {
+        const moveDiv = (pole, op) => {
             if (op == '+' || op == '-') {
                 if (pole == 'ver') {
                     t = eval(t + op + 1);
-                    (t < 0 || t > document.body.offsetHeight) ? clearInterval(run): ball.style.top = `${t}px`;
+                    (t < 8 || t > document.body.offsetHeight - 8) ? clearInterval(run): div.style.top = `${t}px`;
                 } else if (pole == 'hor') {
                     l = eval(l + op + 1);
-                    (l < 0 || l > document.body.offsetWidth) ? clearInterval(run): ball.style.left = `${l}px`;
+                    (l < 8 || l > document.body.offsetWidth - 8) ? clearInterval(run): div.style.left = `${l}px`;
                 }
             };
         };
@@ -56,14 +57,64 @@
             const r = Math.floor(Math.random() * 256);
             const g = Math.floor(Math.random() * 256);
             const b = Math.floor(Math.random() * 256);
-            ball.style.backgroundColor = `rgb(${r},${g},${b})`;
+            div.style.backgroundColor = `rgb(${r},${g},${b})`;
         }
         let run = null;
         window.addEventListener('keydown', event => {
             if (event.key.indexOf('Arrow') == 0) {
                 clearInterval(run)
                 changeColor();
-                event.keyCode === 37 && l > 0 ? run = setInterval(() => moveBall('hor', '-'), 1) : event.keyCode === 38 && t > 0 ? run = setInterval(() => moveBall('ver', '-'), 1) : event.keyCode === 39 && l < document.body.offsetWidth ? run = setInterval(() => moveBall('hor', '+'), 1) : event.keyCode === 40 && t < document.body.offsetHeight ? run = setInterval(() => moveBall('ver', '+'), 1) : console.log('Move end!');
+                event.keyCode === 37 && l > 8 ? run = setInterval(() => moveDiv('hor', '-'), 2) : event.keyCode === 38 && t > 8 ? run = setInterval(() => moveDiv('ver', '-'), 2) : event.keyCode === 39 && l < document.body.offsetWidth - 8 ? run = setInterval(() => moveDiv('hor', '+'), 2) : event.keyCode === 40 && t < document.body.offsetHeight - 8 ? run = setInterval(() => moveDiv('ver', '+'), 2) : console.log('Move end!');
+            }
+        });
+        // canvas
+        const canvas = document.getElementById('myCanvas');
+        canvas.width = document.body.offsetWidth;
+        canvas.height = document.body.offsetHeight;
+        const ctx = canvas.getContext('2d');
+        let moveCircle = null;
+        const rad = 20;
+        let startX = canvas.width / 2;
+        let startY = canvas.height / 2;
+        console.log(canvas.width, canvas.height)
+            // ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = 'white';
+        ctx.beginPath();
+        ctx.arc(startX, startY, rad, 0 * Math.PI, 2 * Math.PI);
+        ctx.fill();
+        const animate = (cor, op) => {
+            if (cor == 'hor') {
+                const x = startX
+                startX = eval(x + op + 1);
+                if (startX < rad || startX > canvas.width - 1 - rad) {
+                    clearInterval(moveCircle);
+                    // startX = x;
+                } else {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.fillStyle = 'white';
+                    ctx.beginPath();
+                    ctx.arc(startX, startY, rad, 0 * Math.PI, 2 * Math.PI);
+                    ctx.fill();
+                }
+            } else if (cor == 'ver') {
+                const y = startY
+                startY = eval(y + op + 1)
+                if (startY < rad || startY > canvas.height - 1 - rad) {
+                    clearInterval(moveCircle);
+                    // startY = y;
+                } else {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.fillStyle = 'white';
+                    ctx.beginPath();
+                    ctx.arc(startX, startY, rad, 0 * Math.PI, 2 * Math.PI);
+                    ctx.fill();
+                }
+            }
+        }
+        window.addEventListener('keydown', event => {
+            if (event.key.indexOf('Arrow') == 0) {
+                clearInterval(moveCircle);
+                event.keyCode === 37 && startX > rad ? moveCircle = setInterval(() => animate('hor', '-'), 1) : event.keyCode === 38 && startY > rad ? moveCircle = setInterval(() => animate('ver', '-'), 1) : event.keyCode === 39 && startX < canvas.width - rad ? moveCircle = setInterval(() => animate('hor', '+'), 1) : event.keyCode === 40 && startY < canvas.height - rad ? moveCircle = setInterval(() => animate('ver', '+'), 1) : console.log('Move end!');
             }
         });
     </script>

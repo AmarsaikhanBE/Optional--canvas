@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bouncing ball</title>
+    <title>Bouncing div</title>
     <style>
         * {
             box-sizing: border-box;
@@ -14,17 +14,16 @@
         }
         
         body {
-            width: calc(100vw - 80px);
-            height: calc(100vh - 80px);
+            width: 100vw;
+            height: 100vh;
             position: relative;
             background-color: #000;
-            margin: 40px auto;
             align-self: center;
         }
         
-        #ball {
-            width: 5rem;
-            height: 5rem;
+        #div {
+            width: 1rem;
+            height: 1rem;
             border: none;
             border-radius: 50%;
             background-color: #fff;
@@ -35,41 +34,65 @@
 </head>
 
 <body>
-    <canvas id="ball" style="top: 50%; left: 50%;"></canvas>
+    <div id="div" style="top: 50%; left: 50%;"></div>
+    <canvas id="myCanvas"></canvas>
     <script>
-        const ball = document.querySelector('#ball');
-        const rect = ball.getBoundingClientRect();
-        let t = rect.top;
-        let l = rect.left;
+        const div = document.querySelector('#div');
+        const rect = div.getBoundingClientRect();
+        let t = rect.top + 8;
+        let l = rect.left + 8;
         let tRule = 'positive';
         let lRule = 'positive';
         const changeColor = () => {
             const r = Math.floor(Math.random() * 256);
             const g = Math.floor(Math.random() * 256);
             const b = Math.floor(Math.random() * 256);
-            ball.style.backgroundColor = `rgb(${r},${g},${b})`;
+            div.style.backgroundColor = `rgb(${r},${g},${b})`;
         }
         changeColor();
         setInterval(() => {
             tRule == 'positive' ? t++ : t--;
-            if (t < 0) {
+            if (t < 8) {
                 tRule = 'positive';
                 changeColor();
-            } else if (t > document.body.offsetHeight) {
+            } else if (t > document.body.offsetHeight - 8) {
                 tRule = 'negative';
                 changeColor();
             }
             lRule == "positive" ? l++ : l--;
-            if (l < 0) {
+            if (l < 8) {
                 lRule = 'positive';
                 changeColor();
-            } else if (l > document.body.offsetWidth) {
+            } else if (l > document.body.offsetWidth - 8) {
                 lRule = 'negative';
                 changeColor();
             }
-            ball.style.top = t + 'px';
-            ball.style.left = l + 'px';
+            div.style.top = t + 'px';
+            div.style.left = l + 'px';
         }, 1);
+        // canvas
+        const canvas = document.getElementById('myCanvas');
+        canvas.width = document.body.offsetWidth;
+        canvas.height = document.body.offsetHeight;
+        const ctx = canvas.getContext('2d');
+        let moveCircle = null
+        const animate = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            xRule == 'pos' ? startX++ : startX--;
+            startX > canvas.width - rad ? xRule = 'neg' : startX < rad ? xRule = 'pos' : xRule = xRule
+            yRule == 'pos' ? startY++ : startY--;
+            startY > canvas.height - rad ? yRule = 'neg' : startY < rad ? yRule = 'pos' : yRule = yRule
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.arc(startX, startY, rad, 0 * Math.PI, 2 * Math.PI);
+            ctx.fill();
+        }
+        const rad = 20
+        let startX = canvas.width / 2;
+        let startY = canvas.height / 2;
+        let xRule = 'pos';
+        let yRule = 'pos';
+        moveCircle = setInterval(animate, 1);
     </script>
 </body>
 
